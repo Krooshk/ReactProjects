@@ -1,33 +1,44 @@
-import { useState } from 'react'
+import { useState, useEffect} from 'react'
 import reactLogo from './assets/react.svg'
+import List from './components/List.jsx'
 import './App.css'
 
 function App() {
-  const [count, setCount] = useState(0)
+
+const [lowTasks,setLowTasks]=useState( JSON.parse(localStorage.getItem('lowTasks')) || [{task:'Посмотреть в окно',done:false},{task:'Почесать спину', done:false},{task:'Выпить пива', done:false}]);
+const [highTasks,setHighTasks]=useState(JSON.parse(localStorage.getItem('highTasks')) || [{task:'Переписать ToDo на рект',done:false},{task:'Посмотреть ролик о TS',done:false},{task:'Применить useEffect в todo',done:false},{task:'Добавить сохранение результатов в localstorage',done:false}]);
+
+
+useEffect(() => {
+	localStorage.setItem('lowTasks', JSON.stringify(lowTasks));
+	localStorage.setItem('highTasks', JSON.stringify(highTasks));
+},[lowTasks,highTasks]);
+
+function addTask(input,name){
+	(name==='HIGH'?setHighTasks:setLowTasks)(oldArray=>[...oldArray,{task:input,done:false}]);
+}
+
+function deleteTask(task,name){
+	(name==='HIGH'?setHighTasks:setLowTasks)(oldArray=>[...oldArray.filter((element)=>element.task!==task)]);
+}
+
+function toggleStatus(task,status,name){
+	(name==='HIGH'?setHighTasks:setLowTasks)(oldArray=>[...oldArray.map((element)=>{
+		return element.task === task ?
+			{...element, done: !status} :
+			element
+	})]);
+	// console.log(status,task);
+	// console.log('work');
+}
+
+
 
   return (
-    <div className="App">
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src="/vite.svg" className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://reactjs.org" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </div>
+	<div className='Container'>
+		<List name='HIGH' toggleStatus={toggleStatus} tasks={highTasks} addTask={addTask} deleteTask={deleteTask}/>
+		<List name='LOW' toggleStatus={toggleStatus} tasks={lowTasks} addTask={addTask} deleteTask={deleteTask}/>
+	</div>
   )
 }
 
