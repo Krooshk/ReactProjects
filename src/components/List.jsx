@@ -14,10 +14,12 @@ function List(props) {
 
 	function addTask(){
 		props.addTask(input,props.name);
+		setInput("");
 	}
 
 	function deleteTask(task){
 		props.deleteTask(task,props.name);
+		console.log(task,props.name);
 	}
 
 	function toggleStatus(task,status){

@@ -5,21 +5,24 @@ function Input(props) {
 	 props.onChange(event.target.value);
 	}
 
-	function addTask(){
+	function addTask(e){
+		e.preventDefault();
 		props.addTask();
 	}
 
 	return (
-		<label className="input-text">
-	  <input 
-	  	type='text' 
-	  	value={props.value} 
-	  	onChange={handleChange} 
-		placeholder={props.importance==='HIGH'?'Добавить важных дел': 'Добавить'}
-		>
-		</input>
-	  <img className='iconAdd' src={CloseIcon} onClick={addTask} alt="plus"></img>
-	  </label>
+		<form onSubmit={addTask}>
+			<label className="input-text">
+				<input
+					type='text'
+					value={props.value}
+					onChange={handleChange}
+					placeholder={props.importance==='HIGH'?'Добавить важных дел': 'Добавить'}
+				>
+				</input>
+				<img className='iconAdd' src={CloseIcon} onClick={addTask} alt="plus"></img>
+			</label>
+		</form>
 	)
   }
   

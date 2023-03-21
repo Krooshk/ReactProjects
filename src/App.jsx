@@ -1,7 +1,7 @@
 import { useState, useEffect} from 'react'
-import reactLogo from './assets/react.svg'
 import List from './components/List.jsx'
 import './App.css'
+
 
 function App() {
 
@@ -15,11 +15,20 @@ useEffect(() => {
 },[lowTasks,highTasks]);
 
 function addTask(input,name){
+
+	let dublicate =(name==='HIGH') ? highTasks.map(item=>item.task).includes(input):
+		lowTasks.map(item=>item.task).includes(input);
+
+	dublicate && alert('Такая задача существует');
+
+	if ((input!==undefined)&&(input!=="")&&(!dublicate)){
 	(name==='HIGH'?setHighTasks:setLowTasks)(oldArray=>[...oldArray,{task:input,done:false}]);
+	}
 }
 
 function deleteTask(task,name){
 	(name==='HIGH'?setHighTasks:setLowTasks)(oldArray=>[...oldArray.filter((element)=>element.task!==task)]);
+	console.log(task);
 }
 
 function toggleStatus(task,status,name){
@@ -28,8 +37,6 @@ function toggleStatus(task,status,name){
 			{...element, done: !status} :
 			element
 	})]);
-	// console.log(status,task);
-	// console.log('work');
 }
 
 
